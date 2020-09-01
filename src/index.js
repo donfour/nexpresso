@@ -1,58 +1,34 @@
 const fs = require('fs');
 const path = require('path');
+const express = require('express');
+const util = require('util');
+const { getAllFiles, createServerObjectFromFiles } = require('./helpers');
 
-const pathToServer = process.argv[2];
+function nexpress(options = {}){
+  const { pathToServer } = options;
 
-if(!pathToServer){
-  throw new Error('You must supply a path to the project\'s root directory');
-}
+  if(!pathToServer){
+    throw new Error('You must supply a path to the nexpress server\'s root directory');
+  }
+  
+  const result = getAllFiles(pathToServer);
+  
+  console.log('result', result); // DEBUG
 
-const directories = fs.readdirSync(
-  path.join(process.cwd(), pathToServer)
-);
+  const serverObject = createServerObjectFromFiles(pathToServer, result);
 
-if(!directories.includes('server')){
-  throw new Error('Your project\'s root must include a directory named "server"');
-}
-
-const getAllFiles = function(currentDir, arrayOfFiles = []) {
-  files = fs.readdirSync(currentDir)
-
-  files.forEach(function(file) {
-    const pathToFile = `${currentDir}/${file}`;
-    if (fs.statSync(pathToFile).isDirectory()) {
-      arrayOfFiles = getAllFiles(pathToFile, arrayOfFiles)
-    } else {
-      arrayOfFiles.push(path.join(__dirname, currentDir, "/", file))
-    }
+  console.log('serverObject', util.inspect(serverObject, showHidden=false, depth=null, colorize=true)); // DEBUG
+  
+  const router = express.Router();
+  
+  Object.entries(serverObject.api).forEach(([path, apiObj]) => {
+    Object.entries(apiObj).forEach(([method, { handler }]) => {
+      console.log(`Setting ${method} ${path}`);
+      router[method](path, handler);
+    })
   })
 
-  return arrayOfFiles
+  return router;
 }
 
-const result = getAllFiles(path.join(process.cwd(), pathToServer, 'server'));
-
-console.log(result);
-
-// const server = {
-//   configs: {
-//     port: 8080,
-//     onStartup: () => {},
-//     onShutdown: () => {},
-//   },
-//   paths: {
-//     api: {
-//       blogs: {
-//         GET: {},
-//         POST: {},
-//         '[id]': {
-//           GET: {},
-//           PUT: {},
-//           DELETE: {},
-//         }
-//       }
-//     }
-//   }
-// };
-
-// console.log(directories);
+module.exports = nexpress;

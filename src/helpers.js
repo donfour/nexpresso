@@ -43,6 +43,10 @@ function createServerObjectFromFiles(pathToServer, filePaths) {
     const method = path.parse(filePath).name.toLowerCase();
     const { handler } = require(filePath);
 
+    if(!_isValidHandler(handler)) {
+      throw new Error(`Invalid handler in file: ${filePath}`);
+    }
+
     // TODO: support linux
     const route = '/' + path.relative(pathToServer, filePath).split('\\').slice(0, -1).map(_parsePathComponent).join('/');
 
@@ -74,6 +78,18 @@ function _parsePathComponent(pathComponent) {
   }
 
   return pathComponent;
+}
+
+function _isValidHandler(handler) {
+  if (typeof handler === 'function') {
+    return true;
+  }
+
+  if (Array.isArray(handler)) {
+    return handler.every(h => typeof h === 'function');
+  }
+
+  return false;
 }
 
 module.exports = {

@@ -9,7 +9,7 @@ const {
 describe('getAllFiles', () => {
   test('it should be able to get files recursively in a directory', () => {
     const files = getAllFiles(path.join(__dirname, '../example/server'));
-    expect(files.length).toBe(2);
+    expect(files.length).toBe(3);
   })
 })
 

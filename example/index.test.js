@@ -38,7 +38,7 @@ describe('example server', () => {
         .expect(200, user, done);
     })
 
-    test('it should respond with 400 when name is not set', done => {
+    test('it should respond with 400 when name is not set', done => { 
       const user = {};
       request(app)
         .post('/user/123')

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const Joi = require('joi');
 
 function getAllFiles(currentDir, arrayOfFiles = []) {
   files = fs.readdirSync(currentDir)
@@ -18,6 +19,7 @@ function getAllFiles(currentDir, arrayOfFiles = []) {
 
 function createServerObjectFromFiles(pathToServer, filePaths) {
   const result = {
+    // TODO: remove port, onStartup, onShutdown if not needed
     port: 8080,
     onStartup: () => { },
     onShutdown: () => { },
@@ -41,9 +43,13 @@ function createServerObjectFromFiles(pathToServer, filePaths) {
     }
 
     const method = path.parse(filePath).name.toLowerCase();
-    const { handler } = require(filePath);
 
-    if(!_isValidHandler(handler)) {
+    const {
+      request,
+      handler
+    } = require(filePath);
+
+    if (!_isValidHandler(handler)) {
       throw new Error(`Invalid handler in file: ${filePath}`);
     }
 
@@ -54,7 +60,10 @@ function createServerObjectFromFiles(pathToServer, filePaths) {
       result.api[route] = {};
     }
 
-    result.api[route][method] = { handler };
+    result.api[route][method] = {
+      request,
+      handler
+    };
   });
 
   return result;
@@ -92,10 +101,46 @@ function _isValidHandler(handler) {
   return false;
 }
 
+
+function getRequestValidator(segment, validation) {
+  const SUPPORTED_SEGMENTS = ['body'];
+  const isSupported = SUPPORTED_SEGMENTS.includes(segment);
+  const { schema, options } = validation;
+
+  return (req, res, next) => {
+    if (!schema) {
+      console.warn(`Skipping request.${segment} validation because schema is not set.`);
+      return next();
+    }
+
+    if (!isSupported) {
+      console.warn(`Skipping request.${segment} validation because it is not one of ${SUPPORTED_SEGMENTS.join(',')}.`);
+      return next();
+    }
+
+    if(Joi.isSchema(schema)){
+      const { error, value } = schema.validate(req[segment], options || {});
+      
+      if(error) {
+        // TODO: support custom onFail behaviors
+        return res.status(400).send(error.message);
+      }
+
+      req[segment] = value;
+    } else {
+      // TODO: support other ways of defining schema
+      console.warn(`request.${segment}.schema is not a Joi schema.`)
+    }
+
+    next();
+  }
+};
+
 module.exports = {
   getAllFiles,
   createServerObjectFromFiles,
   _isConfigFile,
   _isRouteFile,
   _parsePathComponent,
+  getRequestValidator,
 };

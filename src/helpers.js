@@ -41,12 +41,11 @@ function createServerObjectFromFiles(pathToServer, filePaths) {
       );
     }
 
-    // TODO: support linux
     const route =
       '/' +
       path
         .relative(pathToServer, filePath)
-        .split('\\')
+        .split(process.platform === 'win32' ? '\\' : '/')
         .slice(0, -1)
         .map(_parsePathComponent)
         .join('/');

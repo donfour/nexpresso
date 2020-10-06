@@ -4,13 +4,13 @@ const request = require('supertest');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const nexpress = require('../src');
+const nexpresso = require('../src');
 
 describe('example server', () => {
   const app = express();
   app.use(bodyParser.json());
   app.use(
-    nexpress({
+    nexpresso({
       pathToServer: path.join(__dirname, './server'),
     })
   );

@@ -1,5 +1,5 @@
 {
-  "name": "@donfour/nexpress",
+  "name": "nexpresso",
   "version": "0.0.1",
   "description": "An Express middleware that turns your file directories into API endpoints",
   "main": "src/index.js",
@@ -11,7 +11,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/donfour/nexpress"
+    "url": "https://github.com/donfour/nexpresso"
   },
   "dependencies": {
     "express": "^4.17.1"

@@ -1,34 +1,22 @@
 const express = require('express');
-const util = require('util');
 const {
   getAllFiles,
   createServerObjectFromFiles,
   sortRoutes,
 } = require('./helpers');
 
-function nexpress(options = {}) {
+function nexpresso(options = {}) {
   const { pathToServer } = options;
 
   if (!pathToServer) {
     throw new Error(
-      "You must supply a path to the nexpress server's root directory"
+      "You must supply a path to the nexpresso server's root directory"
     );
   }
 
   const files = getAllFiles(pathToServer);
 
   const serverObject = createServerObjectFromFiles(pathToServer, files);
-
-  // DEBUG
-  // console.log(
-  //   'serverObject',
-  //   util.inspect(
-  //     serverObject,
-  //     (showHidden = false),
-  //     (depth = 3),
-  //     (colorize = true)
-  //   )
-  // );
 
   const router = express.Router();
 
@@ -44,4 +32,4 @@ function nexpress(options = {}) {
   return router;
 }
 
-module.exports = nexpress;
+module.exports = nexpresso;

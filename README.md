@@ -1,10 +1,10 @@
-## Nexpress
+## Nexpresso
 
 An Express middleware that turns your file directories into API endpoints
 
 ### Getting started
 
-You first need to create a root directory (e.g. `/server`) for your nexpress files. Then, as an example, to create `GET /some/route`, you create the file `/server/some/route/GET.js`. Inside `GET.js`, you have to export a handler function like so:
+You first need to create a root directory (e.g. `/server`) for your Nexpresso files. Then, as an example, to create `GET /some/route`, you create the file `/server/some/route/GET.js`. Inside `GET.js`, you have to export a handler function like so:
 
 ```js
 // Example 1
@@ -33,23 +33,23 @@ const greet = (req, res) => {
 module.exports = { handler: [log, greet] };
 ```
 
-To set up nexpress, simply import nexpress and pass it to `app.use()` as a middleware.
+To set up nexpresso, simply import Nexpresso and pass it to `app.use()` as a middleware.
 
 ```js
 const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const nexpress = require('@donfour/nexpress');
+const nexpresso = require('nexpresso');
 
 const app = express();
 const port = 8080;
 
 app.use(bodyParser.json());
 
-// set up nexpress
+// set up Nexpresso
 app.use(
-  nexpress({
+  nexpresso({
     pathToServer: path.join(__dirname, './server'),
   })
 );

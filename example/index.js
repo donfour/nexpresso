@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const nexpress = require('../src');
+const nexpresso = require('../src');
 
 const app = express();
 const port = 8080;
@@ -11,7 +11,7 @@ const port = 8080;
 app.use(bodyParser.json());
 
 app.use(
-  nexpress({
+  nexpresso({
     pathToServer: path.join(__dirname, './server'),
   })
 );

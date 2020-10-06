@@ -1,40 +1,45 @@
 const express = require('express');
 const util = require('util');
-const { getAllFiles, createServerObjectFromFiles, getRequestValidator } = require('./helpers');
+const {
+  getAllFiles,
+  createServerObjectFromFiles,
+  sortRoutes,
+} = require('./helpers');
 
 function nexpress(options = {}) {
   const { pathToServer } = options;
 
   if (!pathToServer) {
-    throw new Error('You must supply a path to the nexpress server\'s root directory');
+    throw new Error(
+      "You must supply a path to the nexpress server's root directory"
+    );
   }
 
-  const result = getAllFiles(pathToServer);
+  const files = getAllFiles(pathToServer);
 
-  console.log('result', result); // DEBUG
+  const serverObject = createServerObjectFromFiles(pathToServer, files);
 
-  const serverObject = createServerObjectFromFiles(pathToServer, result);
-
-  console.log('serverObject', util.inspect(serverObject, showHidden = false, depth = 3, colorize = true)); // DEBUG
+  // DEBUG
+  // console.log(
+  //   'serverObject',
+  //   util.inspect(
+  //     serverObject,
+  //     (showHidden = false),
+  //     (depth = 3),
+  //     (colorize = true)
+  //   )
+  // );
 
   const router = express.Router();
 
-  Object.entries(serverObject.api).forEach(([path, apiObj]) => {
-    Object.entries(apiObj).forEach(([method, api]) => {
-      const {
-        request,
-        handler
-      } = api;
+  const routes = Object.keys(serverObject.api).sort(sortRoutes);
 
-      console.log(`Setting ${method} ${path}`);
-
-      const requestValidations = Object.entries(request || {}).map(([segment, validation]) => {
-        return getRequestValidator(segment, validation);
-      })
-
-      router[method](path, [...requestValidations, handler]);
-    })
-  })
+  routes.forEach((route) => {
+    Object.entries(serverObject.api[route]).forEach(([method, api]) => {
+      const { handler } = api;
+      router[method](route, handler);
+    });
+  });
 
   return router;
 }

@@ -1,5 +1,5 @@
-const handler = (req, res) => {
-  return res.send("pong");
-}
+const pong = (req, res) => {
+  return res.send('pong');
+};
 
-module.exports = { handler };
+module.exports = { handler: pong };

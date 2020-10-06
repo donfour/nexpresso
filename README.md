@@ -12,11 +12,11 @@ Install Express and Nexpresso:
 yarn add express nexpresso
 ```
 
-You first need to create a root directory (e.g. `/server`) for your Nexpresso files. Then, as an example, to create `GET /some/route`, you create the file `/server/some/route/GET.js`. Inside `GET.js`, you have to export a handler function like so:
+You first need to create a root directory (e.g. `/server`) to contain your Nexpresso files. To create the route `GET /some/route`, simply create the file `/server/some/route/GET.js`. Inside `GET.js`, you have to export a handler function like so:
 
 ```js
 // Example 1
-// server/some/route/GET.js
+// /server/some/route/GET.js
 const greet = (req, res) => {
   return res.send('Hello world!');
 };
@@ -28,7 +28,7 @@ module.exports = { handler: greet };
 
 ```js
 // Example 2
-// server/some/route/GET.js
+// /server/some/route/GET.js
 const log = (req, res, next) => {
   console.log('I am called!');
   next();
@@ -75,11 +75,11 @@ For more use cases, see the tests and files in `example`.
 
 ### Easier to find routes
 
-Finding the entry points to an Express route is often painful. In Nexpresso, finding your routes is easy because `GET /some/route` is simply in the file `/some/route/GET.js`.
+Finding the code for an Express route is often painful. In Nexpresso, finding your routes is easy because `GET /some/route` is simply in the file `/some/route/GET.js`.
 
 ### Avoid magical side effects from middlewares
 
-In Express, by changing the order of routes, you can have middlewares affect parts of the app, which is a horrible design. Because you will then have middlewares defined hundreds of lines of code away or even worse, in other files. Nexpresso enforces that middlewares must either affect all endpoints (e.g. `body-parser`) or only one endpoint (e.g. validation, authentication).
+In Express, by changing the order of routes, you can have middlewares affect parts of the app, which in my opinion is a horrible design. Because then you will have middlewares defined hundreds of lines away, or even worse, in other files. Nexpresso enforces that middlewares must either affect all endpoints (e.g. `body-parser`) or only one endpoint (e.g. validation, authentication).
 
 ### Possibilities for more powerful features
 

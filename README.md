@@ -1,8 +1,16 @@
 ## Nexpresso
 
-An Express middleware that turns your file directories into API endpoints
+An Express middleware that turns your file directories into API endpoints.
+
+Inspired by Next.js, so... thank you, next! (pun intended)
 
 ### Getting started
+
+Install Express and Nexpresso:
+
+```
+yarn add express nexpresso
+```
 
 You first need to create a root directory (e.g. `/server`) for your Nexpresso files. Then, as an example, to create `GET /some/route`, you create the file `/server/some/route/GET.js`. Inside `GET.js`, you have to export a handler function like so:
 

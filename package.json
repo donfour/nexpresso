@@ -1,6 +1,6 @@
 {
   "name": "nexpresso",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An Express middleware that turns your file directories into API endpoints",
   "main": "src/index.js",
   "scripts": {

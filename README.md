@@ -41,6 +41,8 @@ const greet = (req, res) => {
 module.exports = { handler: [log, greet] };
 ```
 
+To create a route that takes a parameter (e.g. `GET /users/:id`), simply create the file `/server/users/[id]/GET.js`, where `[id]` is the folder's name literally.
+
 To set up nexpresso, simply import Nexpresso and pass it to `app.use()` as a middleware.
 
 ```js

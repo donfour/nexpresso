@@ -45,14 +45,14 @@ To set up nexpresso, simply import Nexpresso and pass it to `app.use()` as a mid
 
 ```js
 const path = require('path');
-
 const express = require('express');
-const bodyParser = require('body-parser');
 const nexpresso = require('nexpresso');
 
 const app = express();
 const port = 8080;
 
+// if you need to read the json body from requests
+const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 // set up Nexpresso
